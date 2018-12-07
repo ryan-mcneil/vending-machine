@@ -5,6 +5,7 @@ class Transaction
   def initialize()
     @vending_machine = VendingMachine.new('tiny_vending_machine.json')
     @total_inserted = 0
+    @denominations = [1, 5, 10, 25]
   end
 
   def begin
@@ -14,18 +15,20 @@ class Transaction
   private
 
   def request_input
-    print_menu
+    loop do
+      print_menu
 
-    input = gets.chomp.downcase
-    case input
-    when 'c'
-      @vending_machine.print_contents
-    when 'i'
-      insert_money
-    when 'v'
+      input = gets.chomp.downcase
+      case input
+      when 'c'
+        @vending_machine.print_contents
+      when 'i'
+        insert_money
+      when 'v'
 
-    when 'p'
-
+      when 'p'
+        break if purchase
+      end
     end
   end
 
@@ -39,7 +42,20 @@ class Transaction
 
   def insert_money
     puts "Please insert your money"
+    input = gets.chomp.to_i
+    if @denominations.include?(input)
+      @total_inserted += input
+      puts "Total Inserted: #{@total_inserted}"
+    else
+      puts "Not a valid coin"
+    end
   end
+
+  def purchase
+
+    true
+  end
+
 end
 
 Transaction.new.begin
